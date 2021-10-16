@@ -15,6 +15,6 @@ class Migration(migrations.Migration):
             VALUES ("collection_no1")
         """, """
             DELETE FROM store_collection
-            WHERE title="collection_no1"
+            WHERE title="collection_no1"`
         """)
     ]
