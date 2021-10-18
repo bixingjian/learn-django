@@ -1,6 +1,7 @@
 from django.contrib.contenttypes.models import ContentType
 from django.core import exceptions
 from django.core.exceptions import ObjectDoesNotExist
+from django.db import transaction
 from django.db.models.fields import DecimalField
 from django.db.models import Q, F, Value, Func, ExpressionWrapper
 from django.db.models.functions import Concat
@@ -56,26 +57,34 @@ def say_hello(request):
 
     # TaggedItem.objects.get_tags_for(Product, 1) #这是一个定义在tags.models中的自定义manager, 取代默认的manager
 
-
+    #---------- create ----------#
     # collection = Collection.objects.create(title="a", featured_product_id=1) # 和下面的方法一样 但上面的方法更好一点
     # collection.id 
 
-
+    #---------- update ----------#
     # collection = Collection.objects.get(pk=11) #这样就不会因为没有设置某个属性而使那个属性为空 因为我们取出了特定的Collection实例
     # collection.featured_product = None
     # collection.save()
 
     # Collection.objects.filter(pk=11).update(featured_product=None)
 
-
+    #---------- delete ----------#
     # collection = Collection(pk=11)
     # collection.delete()
 
     # Collection.objects.filter(id__gt=10).delete()
 
+    with transaction.atomic():
+        order = Order()
+        order.customer_id = 1 #customer_id 和 customer__id效果是一样的
+        order.save()
 
-
-
+        item = OrderItem()
+        item.order = order
+        item.product_id = 1
+        item.quantity = 1
+        item.unit_price = 10
+        item.save()
 
 
     return render(request, 'hello.html', {'name': 'Mosh'})
