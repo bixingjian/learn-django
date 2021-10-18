@@ -54,11 +54,7 @@ def say_hello(request):
     # queryset = Product.objects.annotate(discounted_price = discounted_price)
     # queryset = Customer.objects.annotate(orders_count=Count("order")).filter(orders_count__gt=5)
 
-    content_type = ContentType.objects.get_for_model(Product) #找到product的content_type_id
-    queryset = TaggedItem.objects \
-        .select_related("tag") \
-        .filter(
-            content_type=content_type, 
-            object_id=1
-        ) 
+    TaggedItem.objects.get_tags_for(Product, 1)
+
+
     return render(request, 'hello.html', {'name': 'Mosh', "tags": list(queryset)})
