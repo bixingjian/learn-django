@@ -7,7 +7,7 @@ from django.db.models.functions import Concat
 from django.db.models.aggregates import Count, Avg, Sum, Max, Min
 from django.http import HttpResponse
 from django.shortcuts import render
-from store.models import Product, Customer, OrderItem, Order
+from store.models import Product, Customer, OrderItem, Order, Collection
 from tags.models import TaggedItem, Tag
 
 
@@ -54,7 +54,15 @@ def say_hello(request):
     # queryset = Product.objects.annotate(discounted_price = discounted_price)
     # queryset = Customer.objects.annotate(orders_count=Count("order")).filter(orders_count__gt=5)
 
-    TaggedItem.objects.get_tags_for(Product, 1)
+    # TaggedItem.objects.get_tags_for(Product, 1) #这是一个定义在tags.models中的自定义manager, 取代默认的manager
 
+    collection = Collection()
+    collection.title = "Video Games"
+    collection.featured_product = Product(pk=1)
+    collection.save()
+    collection.id
 
-    return render(request, 'hello.html', {'name': 'Mosh', "tags": list(queryset)})
+    collection = Collection.objects.create(title="a", featured_product_id=1) # 和上面的方法一样
+    collection.id 
+
+    return render(request, 'hello.html', {'name': 'Mosh'})
