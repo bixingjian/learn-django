@@ -1,7 +1,9 @@
 # Byte-compiled / optimized / DLL files
-__pycache__/
+*/__pycache__/
 *.py[cod]
-
+pycache/init.cpython-37.pyc
+pycache/
+*.pyc
 # C extensions
 *.so
 
