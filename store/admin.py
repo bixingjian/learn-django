@@ -1,7 +1,10 @@
 from django.contrib import admin, messages
+from django.contrib.admin.options import TabularInline
+from django.contrib.contenttypes.admin import GenericTabularInline
 from django.db.models.aggregates import Count
 from django.urls import reverse
 from django.utils.html import format_html, urlencode
+from tags.models import TaggedItem
 from . import models
 
 # 参考文档：https://docs.djangoproject.com/zh-hans/3.2/ref/contrib/admin/#modeladmin-options
@@ -20,6 +23,10 @@ class InventoryFilter(admin.SimpleListFilter):
             return queryset.filter(inventory__lt=10)
 
 
+class TagInline(GenericTabularInline):
+    autocomplete_fields = ["tag"]
+    model = TaggedItem
+    
 
 @admin.register(models.Product)
 class ProductAdmin(admin.ModelAdmin): #这个class是product类的admin model
@@ -28,6 +35,7 @@ class ProductAdmin(admin.ModelAdmin): #这个class是product类的admin model
         "slug": ["title"]
     }
     actions = ["clear_inventory"]
+    inlines = [TagInline]
     list_display = ["title", "unit_price", "inventory_status", "collection_title"]
     list_editable = ["unit_price"]
     list_filter = ["collection", "last_update", InventoryFilter]
@@ -79,10 +87,10 @@ class CollectionAdmin(admin.ModelAdmin):
 
 
 class OrderItemInline(admin.TabularInline):
+    model = models.OrderItem
     autocomplete_fields = ["product"]
     min_num = 1
     max_num = 10
-    model = models.OrderItem
     extra = 0
 
 
