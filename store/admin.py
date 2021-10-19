@@ -23,9 +23,6 @@ class InventoryFilter(admin.SimpleListFilter):
             return queryset.filter(inventory__lt=10)
 
 
-
-    
-
 @admin.register(models.Product)
 class ProductAdmin(admin.ModelAdmin): #这个class是product类的admin model
     autocomplete_fields = ["collection"] #在下拉选择中可以搜索
