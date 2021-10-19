@@ -33,6 +33,7 @@ class ProductAdmin(admin.ModelAdmin): #这个class是product类的admin model
     list_filter = ["collection", "last_update", InventoryFilter]
     list_per_page = 30
     list_select_related = ["collection"]
+    search_fields = ['title']
 
     def collection_title(self, product):
         return product.collection.title
@@ -77,7 +78,16 @@ class CollectionAdmin(admin.ModelAdmin):
         ) 
 
 
+class OrderItemInline(admin.TabularInline):
+    autocomplete_fields = ["product"]
+    min_num = 1
+    max_num = 10
+    model = models.OrderItem
+    extra = 0
+
+
 @admin.register(models.Order)
 class OrderAdmin(admin.ModelAdmin):
-    list_display = ["id", "placed_at", "customer"]
     autocomplete_fields = ["customer"]
+    inlines = [OrderItemInline]
+    list_display = ["id", "placed_at", "customer"]
