@@ -30,6 +30,7 @@ class CustomerAdmin(admin.ModelAdmin):
     list_editable = ["membership"]
     ordering = ["first_name", "last_name" ] # 先按照fist_name 升序排序
     list_per_page = 30
+    search_fields = ["first_name__istartwith", "last_name_istartwith"] # 搜索框 搜索cat: first_name或者last_name中有cat的
 
 
 @admin.register(models.Collection)
