@@ -6,11 +6,26 @@ from . import models
 
 # 参考文档：https://docs.djangoproject.com/zh-hans/3.2/ref/contrib/admin/#modeladmin-options
 
+class InventoryFilter(admin.SimpleListFilter):
+    title = "inventory"
+    parameter_name = "inventory"
+
+    def lookups(self, request, model_admin): #what item should appears here
+        return [
+            ("<10", "Low") #<10是逻辑 Low是现实的内容(人读的东西)
+        ]
+    
+    def queryset(self, request, queryset):
+        if self.value() == "<10": # self.value() return the selected filter
+            return queryset.filter(inventory__lt=10)
+
+
 
 @admin.register(models.Product)
 class ProductAdmin(admin.ModelAdmin): #这个class是product类的admin model
     list_display = ["title", "unit_price", "inventory_status", "collection_title"]
     list_editable = ["unit_price"]
+    list_filter = ["collection", "last_update", InventoryFilter]
     list_per_page = 30
     list_select_related = ["collection"]
 
